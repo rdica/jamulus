@@ -282,6 +282,21 @@ Results:
 | result.clients[*].countryName | number | The text name of the country specified by the user for this channel (see QLocale::Country). |
 | result.clients[*].skillLevelCode | number | The skill level id provided by the user for this channel. |
 
+### jamulusserver/getClientCount
+
+Returns number of connected clients only.
+
+Parameters:
+
+| Name | Type | Description |
+| --- | --- | --- |
+| params | object | No parameters (empty object). |
+
+Results:
+
+| Name | Type | Description |
+| --- | --- | --- |
+| result.connections | number | The number of active connections. |
 
 ### jamulusserver/getRecorderStatus
 
