@@ -115,6 +115,38 @@ CServerRpc::CServerRpc ( CServer* pServer, CRpcServer* pRpcServer, QObject* pare
         Q_UNUSED ( params );
     } );
 
+    pRpcServer->HandleMethod ( "jamulusserver/getClientCount", [=] ( const QJsonObject& params, QJsonObject& response ) {
+        QJsonArray                clients;
+        CVector<CHostAddress>     vecHostAddresses;
+        CVector<QString>          vecsName;
+        CVector<int>              veciJitBufNumFrames;
+        CVector<int>              veciNetwFrameSizeFact;
+        CVector<CChannelCoreInfo> vecChanInfo;
+
+        int connections = 0;
+
+        pServer->GetConCliParam ( vecHostAddresses, vecsName, veciJitBufNumFrames, veciNetwFrameSizeFact, vecChanInfo );
+        // we assume that all vectors have the same length
+        const int iNumChannels = vecHostAddresses.Size();
+
+        // fill list with connected clients
+        for ( int i = 0; i < iNumChannels; i++ )
+        {
+            if ( vecHostAddresses[i].InetAddr == QHostAddress ( static_cast<quint32> ( 0 ) ) )
+            {
+                continue;
+            }
+            ++connections;
+        }
+
+        // create result object
+        QJsonObject result{
+            { "connections", connections },
+        };
+        response["result"] = result;
+        Q_UNUSED ( params );
+    } );
+
     /// @rpc_method jamulusserver/getServerProfile
     /// @brief Returns the server registration profile and status.
     /// @param {object} params - No parameters (empty object).
